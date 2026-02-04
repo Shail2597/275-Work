@@ -7,7 +7,7 @@ fi
 
 for stem in $(cat "$1"); do
     echo "Description for test case '$stem':"
-    desc_file = "$stem.desc"
+    desc_file="$stem.desc"
     if [[ -f "$desc_file" ]]; then
         cat "$desc_file"
     else
