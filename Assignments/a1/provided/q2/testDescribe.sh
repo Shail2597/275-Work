@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ "$#" -eq 0 ]]; then
-    echo "Usage: ./testDescribe <test_set_file>" >&2
+    echo "Usage: ./testDescribe test_set_file" >&2
     exit 1
 fi
 
