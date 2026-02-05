@@ -9,7 +9,7 @@ command="$1"
 testset="$2"
 
 for stem in $(cat "$testset"); do
-    tempfile=$(mktemp)
+    tmpfile=$(mktemp)
     $command < "${stem}.in" > "$tmpfile"
     diff "$tmpfile" "${stem}.out" > /dev/null
     if [[ $? -eq 0 ]]; then
