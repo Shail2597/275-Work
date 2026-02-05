@@ -10,7 +10,7 @@ testset="$2"
 
 for stem in $(cat "$testset"); do
     tmpfile=$(mktemp)
-    $command < "${stem}.in" > "$tmpfile"
+    $command $(cat "$stem.args")< "${stem}.in" > "$tmpfile"
     diff "$tmpfile" "${stem}.out" > /dev/null
     if [[ $? -eq 0 ]]; then
         echo "Test ${stem} passed"
