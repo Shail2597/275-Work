@@ -20,6 +20,6 @@ for stem in $(cat "$testset"); do
         cat "${stem}.out"
         echo "Actual output:"
         cat "$tmpfile"
-fi
-
-rm "$tmpfile"
+    fi
+    rm "$tmpfile"
+done
