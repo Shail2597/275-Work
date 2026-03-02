@@ -15,6 +15,21 @@ unsigned int string_to_uint(char *str) {
   return res;
 }
 
+int startsWithInteger(char *str) {
+  int i = 0;
+
+  // Optional sign
+  if (str[i] == '+' || str[i] == '-') {
+      i++;
+  }
+
+  // Must have at least one digit
+  if (str[i] < '0' || str[i] > '9') {
+      return 0;   // false
+  }
+
+  return 1;       // true
+}
 int main(int argc, char *argv[]) {
 
   if (argc != 4) {
@@ -22,21 +37,6 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  int startsWithInteger(char *str) {
-    int i = 0;
-
-    // Optional sign
-    if (str[i] == '+' || str[i] == '-') {
-        i++;
-    }
-
-    // Must have at least one digit
-    if (str[i] < '0' || str[i] > '9') {
-        return 0;   // false
-    }
-
-    return 1;       // true
-}
 
 if (!startsWithInteger(argv[1])) {
     fprintf(stderr, "First argument must be an integer\n");
