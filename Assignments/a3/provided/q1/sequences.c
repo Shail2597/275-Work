@@ -2,80 +2,95 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct Operation {
+struct Op {
     char operator;  // 1=add, 2=sub, 3=mul, 4=div
     int value;
+    struct Op *next;
 };
 
-struct OperationsArray {
+struct List {
     int len;
-    int capacity;
-    struct Operation *data;
+    struct Op *head;
 };
 
-void addToOperations(struct OperationsArray *list, char operator, int value) {
-    if (list->len >= list->capacity) {
-        list->capacity = (list->capacity == 0) ? 10 : list->capacity * 2;
-        list->data = realloc(list->data, list->capacity * sizeof(struct Operation));
+void addOp(struct List *lst, char operator, int value) {
+    struct Op *node = malloc(sizeof(struct Op));
+    node->next = NULL;
+    node->operator = operator;
+    node->value = value;
+
+    if (lst->head == NULL) {
+        lst->head = node;
+        lst->len = 1;
+    } else {
+        struct Op *cur = lst->head;
+        while (cur->next != NULL) cur = cur->next;
+        cur->next = node;
+        lst->len += 1;
     }
-    list->data[list->len].operator = operator;
-    list->data[list->len].value = value;
-    list->len++;
 }
 
-int resultOfOperation(struct OperationsArray *l, int val) {
+int applyOps(struct List *lst, int val) {
     int result = val;
-    for (int i = 0; i < l->len; i++) {
-        if (l->data[i].operator == 1)      result += l->data[i].value;
-        else if (l->data[i].operator == 2) result -= l->data[i].value;
-        else if (l->data[i].operator == 3) result *= l->data[i].value;
-        else                          result /= l->data[i].value;
+    struct Op *cur = lst->head;
+    for (int i = 0; i < lst->len; i++, cur = cur->next) {
+        if (cur->operator == 1)      result += cur->value;
+        else if (cur->operator == 2) result -= cur->value;
+        else if (cur->operator == 3) result *= cur->value;
+        else                          result /= cur->value;
     }
     return result;
 }
 
-void cleanUpList(struct OperationsArray *list) {
-    if (!list) return;
-    if (list->data) free(list->data);
-    free(list);
+void freeNode(struct Op *node) {
+    if (!node) return;
+    freeNode(node->next);
+    free(node);
 }
 
-// maps operator string to internal code (25 = unrecognized)
-char map(const char *s) {
+void freeList(struct List *lst) {
+    if (!lst) return;
+    freeNode(lst->head);
+    free(lst);
+}
+
+// maps operator string to internal code (0 = unrecognized)
+char getOp(const char *s) {
     if (strcmp(s, "add") == 0) return 1;
     if (strcmp(s, "sub") == 0) return 2;
     if (strcmp(s, "mul") == 0) return 3;
     if (strcmp(s, "div") == 0) return 4;
-    return 25;
+    return 0;
 }
 
 int main(int argc, char **argv) {
     if (argc != 2) {
-        fprintf(stderr, "Incorrect Usage: Please enter exactly one command line argument\n");
+        fprintf(stderr, "Usage: %s N", argv[0]);
         return 1;
     }
 
-    int startingValue = atoi(*(argv + 1));
+    int val = atoi(*(argv + 1));
 
-    struct OperationsArray *list = malloc(sizeof(struct OperationsArray));
-    if (!list) return 1;
-    list->data = NULL;
-    list->capacity = 0;
-    list->len = 0;
+    struct List *lst = malloc(sizeof(struct List));
+    if (!lst) return 1;
+    lst->head = NULL;
+    lst->len = 0;
 
-    char command[10];
-    int operand;
+    char cmd[10];
+    int num;
 
-    while (scanf("%9s", command) != EOF) {
-        if (strcmp(command, "n") != 0) {
-            scanf("%d", &operand);
-            addToOperations(list, map(command), operand);
+    while (scanf("%9s", cmd) != EOF) {
+        if (strcmp(cmd, "n") != 0) {
+            char op = getOp(cmd);
+            if (scanf("%d", &num) == 1 && op != 0) {
+                addOp(lst, op, num);
+            }
         } else {
-            startingValue = resultOfOperation(list, startingValue);
-            printf("%d\n", startingValue);
+            val = applyOps(lst, val);
+            printf("%d\n", val);
         }
     }
 
-    cleanUpList(list);
+    freeList(lst);
     return 0;
 }
