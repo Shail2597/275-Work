@@ -242,7 +242,7 @@ done
 echo "Generated .out files from writeValSample (including edge cases)"
 
 # Compile
-$GCC harness.c writeVal.c raw.c
+$GCC harness.c writeval.c raw.c
 if [[ $? -ne 0 ]]; then
     echo "  COMPILE FAILED for writeVal"
 else
