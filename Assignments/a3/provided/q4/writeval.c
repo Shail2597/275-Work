@@ -67,7 +67,7 @@ void printValues(void *dataStart) {
 
         } else if (marker == TAG_CHAR) {
             char *v = (char *)(pos + 1);
-            printf("Value %d at %p: %c\n", idx, (void *)pos, *v);
+            printf("Value %d at %p: '%c'\n", idx, (void *)pos, *v);
             pos = v + 1;
 
         } else if (marker == TAG_PTR) {
