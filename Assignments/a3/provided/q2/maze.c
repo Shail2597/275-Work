@@ -52,7 +52,10 @@ struct Maze *readMaze() {
 
         for (int i = 0; i < lineLen; i++) {
             if (!isValidTile(line[i])) {
+                for (int r = 0; r < rowCnt; r++) free(data[r]);
+                free(data);
                 printf("Invalid character found when reading maze: %c - this is invalid input\n", line[i]);
+                return NULL;
             }
         }
 
