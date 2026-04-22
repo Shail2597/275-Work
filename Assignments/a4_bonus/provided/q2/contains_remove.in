@@ -1,0 +1,9 @@
+n a 10 20 30 40 q
+c a 20
+c a 99
+r a 20
+p a
+c a 20
+r a 999
+p a
+q

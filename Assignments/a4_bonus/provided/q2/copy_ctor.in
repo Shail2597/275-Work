@@ -1,0 +1,10 @@
+n a 1 2 3 q
+d b a
+p a
+p b
+a a 99
+a b 100
+p a
+p b
+= a b
+q

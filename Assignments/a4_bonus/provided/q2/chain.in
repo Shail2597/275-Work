@@ -1,0 +1,14 @@
+n a 10 20 30 40 50 q
+d b a
+r a 30
+a b 60
+p a
+p b
+= a b
+| a b
+& a b
+s a b
+s b a
+< a b
+= a b
+q

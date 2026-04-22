@@ -1,0 +1,7 @@
+n a 1 2 3 q
+m b a
+n a 7 8 9 q
+p a
+p b
+= a b
+q

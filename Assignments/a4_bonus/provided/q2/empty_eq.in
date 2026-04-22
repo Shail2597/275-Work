@@ -1,0 +1,8 @@
+n a q
+n b q
+= a b
+p a
+p b
+| a b
+& a b
+q

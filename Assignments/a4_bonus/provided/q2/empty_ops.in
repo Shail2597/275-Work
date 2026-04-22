@@ -1,0 +1,12 @@
+n a q
+n b q
+p a
+p b
+= a b
+| a b
+& a b
+s a b
+s b a
+c a 0
+r a 0
+q

@@ -1,0 +1,11 @@
+n a 1 2 3 4 5 q
+p a
+r a 3
+p a
+r a 1
+p a
+r a 5
+p a
+r a 99
+p a
+q

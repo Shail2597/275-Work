@@ -1,0 +1,8 @@
+n a 1 2 3 4 5 q
+n b 2 4 q
+n c 1 2 6 q
+s a b
+s a c
+s b a
+s b b
+q

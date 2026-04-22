@@ -1,0 +1,11 @@
+n a 7 8 9 q
+n b 1 2 q
+< b a
+p a
+p b
+= a b
+a b 42
+p a
+p b
+= a b
+q
