@@ -1,0 +1,11 @@
+n a 10 20 30 q
+p a
+r a 10
+p a
+r a 20
+p a
+r a 30
+p a
+r a 30
+p a
+q

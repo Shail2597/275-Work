@@ -1,0 +1,8 @@
+n a 1 2 3 4 q
+n b 1 2 3 4 5 q
+= a b
+r b 5
+= a b
+p a
+p b
+q

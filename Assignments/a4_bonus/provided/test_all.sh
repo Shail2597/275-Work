@@ -326,6 +326,179 @@ p p p
 EOF
 gen $SAMPLE multi_print
 
+# Pulsar (period-3 oscillator)
+cat > pulsar.in << 'EOF'
+.................
+....OOO...OOO....
+.................
+.O....O.O....O...
+.O....O.O....O...
+.O....O.O....O...
+....OOO...OOO....
+.................
+....OOO...OOO....
+.O....O.O....O...
+.O....O.O....O...
+.O....O.O....O...
+.................
+....OOO...OOO....
+.................
+x
+p
+s p
+s p
+s p
+EOF
+gen $SAMPLE pulsar
+
+# Checkerboard — every live cell has 0 or 2 neighbors → interesting decay
+cat > checkerboard.in << 'EOF'
+O.O.O.
+.O.O.O
+O.O.O.
+.O.O.O
+O.O.O.
+.O.O.O
+x
+p
+s p
+s p
+s p
+EOF
+gen $SAMPLE checkerboard
+
+# 1×2 grid
+cat > one_by_two.in << 'EOF'
+OO
+x
+p
+s p
+s p
+EOF
+gen $SAMPLE one_by_two
+
+# 2×1 grid
+cat > two_by_one.in << 'EOF'
+O
+O
+x
+p
+s p
+s p
+EOF
+gen $SAMPLE two_by_one
+
+# Step only — no p commands
+cat > step_only.in << 'EOF'
+.....
+.OOO.
+.....
+x
+s s s s s s s s s s
+EOF
+gen $SAMPLE step_only
+
+# No commands at all (just grid definition)
+cat > no_commands.in << 'EOF'
+.OOO.
+.OOO.
+.OOO.
+x
+EOF
+gen $SAMPLE no_commands
+
+# R-pentomino (famous methuselah — run a few steps)
+cat > r_pentomino.in << 'EOF'
+.........
+....OO...
+...OO....
+....O....
+.........
+.........
+.........
+.........
+.........
+x
+p
+s s s s s p
+s s s s s p
+s s s s s p
+s s s s s p
+EOF
+gen $SAMPLE r_pentomino
+
+# L-shape — dead cells with exactly 3 live neighbors come alive
+cat > l_shape_birth.in << 'EOF'
+.....
+.OO..
+.O...
+.....
+x
+p
+s p
+s p
+EOF
+gen $SAMPLE l_shape_birth
+
+# Thin cross
+cat > thin_cross.in << 'EOF'
+.....
+..O..
+.OOO.
+..O..
+.....
+x
+p
+s p
+s p
+s p
+EOF
+gen $SAMPLE thin_cross
+
+# Tall narrow grid (many rows, few cols)
+cat > tall_grid.in << 'EOF'
+...
+.O.
+.O.
+.O.
+.O.
+.O.
+...
+x
+p
+s p
+s p
+EOF
+gen $SAMPLE tall_grid
+
+# Wide short grid (many cols, few rows)
+cat > wide_grid.in << 'EOF'
+...........
+..OOO.OOO..
+...........
+x
+p
+s p
+s p
+EOF
+gen $SAMPLE wide_grid
+
+# Snake / diagonal line
+cat > diagonal.in << 'EOF'
+O......
+.O.....
+..O....
+...O...
+....O..
+.....O.
+......O
+x
+p
+s p
+s p
+EOF
+gen $SAMPLE diagonal
+
 echo "Generated .out/.err files from conways_sample"
 
 # Compile
@@ -338,7 +511,10 @@ else
               block beehive toad beacon glider \
               single_cell all_dead all_alive corners \
               one_row one_col one_by_one_alive one_by_one_dead \
-              many_steps just_print invalid_cmd multi_print; do
+              many_steps just_print invalid_cmd multi_print \
+              pulsar checkerboard one_by_two two_by_one \
+              step_only no_commands r_pentomino \
+              l_shape_birth thin_cross tall_grid wide_grid diagonal; do
         run_test ./conways "$t"
     done
 fi
@@ -643,6 +819,203 @@ q
 EOF
 gen $SAMPLE chain
 
+# ── Single element sets ───────────────────────
+cat > single_elem.in << 'EOF'
+n a 42 q
+n b 42 q
+n c 99 q
+p a
+p b
+p c
+= a b
+= a c
+| a c
+& a c
+s a b
+s b a
+s a c
+c a 42
+c a 41
+q
+EOF
+gen $SAMPLE single_elem
+
+# ── Boundary integers ─────────────────────────
+cat > boundary_ints.in << 'EOF'
+n a 2147483647 -2147483648 0 q
+p a
+c a 2147483647
+c a -2147483648
+c a 0
+c a 1
+r a 0
+p a
+q
+EOF
+gen $SAMPLE boundary_ints
+
+# ── Copy of a copy (deep copy chain) ──────────
+cat > copy_of_copy.in << 'EOF'
+n a 1 2 3 q
+d b a
+d c b
+p a
+p b
+p c
+a a 10
+a b 20
+a c 30
+p a
+p b
+p c
+= a b
+= b c
+= a c
+q
+EOF
+gen $SAMPLE copy_of_copy
+
+# ── Repeated copy assignment ──────────────────
+cat > repeat_assign.in << 'EOF'
+n a 1 2 3 q
+n b 4 5 6 q
+< a b
+p a
+< a b
+p a
+a a 99
+p a
+p b
+= a b
+q
+EOF
+gen $SAMPLE repeat_assign
+
+# ── Print result of union / intersection ──────
+cat > print_ops_result.in << 'EOF'
+n a 1 2 3 4 q
+n b 3 4 5 6 q
+| a b
+& a b
+| a b
+& a b
+p a
+p b
+q
+EOF
+gen $SAMPLE print_ops_result
+
+# ── Disjoint union (no common elements) ───────
+cat > disjoint_union.in << 'EOF'
+n a 1 3 5 7 q
+n b 2 4 6 8 q
+| a b
+& a b
+= a b
+s a b
+s b a
+q
+EOF
+gen $SAMPLE disjoint_union
+
+# ── Remove all elements one by one ────────────
+cat > remove_all.in << 'EOF'
+n a 10 20 30 q
+p a
+r a 10
+p a
+r a 20
+p a
+r a 30
+p a
+r a 30
+p a
+q
+EOF
+gen $SAMPLE remove_all
+
+# ── Add zero / negative ───────────────────────
+cat > add_zero_neg.in << 'EOF'
+n a q
+a a 0
+a a -1
+a a -100
+a a 0
+p a
+c a 0
+c a -1
+c a -100
+c a 1
+q
+EOF
+gen $SAMPLE add_zero_neg
+
+# ── Equality after remove ─────────────────────
+cat > eq_after_remove.in << 'EOF'
+n a 1 2 3 4 q
+n b 1 2 3 4 5 q
+= a b
+r b 5
+= a b
+p a
+p b
+q
+EOF
+gen $SAMPLE eq_after_remove
+
+# ── Operate on result of intersection (via copy) ─
+cat > intersect_then_modify.in << 'EOF'
+n a 1 2 3 4 5 q
+n b 3 4 5 6 7 q
+d c a
+< c b
+p c
+& a b
+p a
+p b
+p c
+q
+EOF
+gen $SAMPLE intersect_then_modify
+
+# ── Grow large then remove half ───────────────
+cat > grow_then_shrink.in << 'EOF'
+n a 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 q
+p a
+r a 1
+r a 3
+r a 5
+r a 7
+r a 9
+r a 11
+r a 13
+r a 15
+r a 17
+r a 19
+p a
+q
+EOF
+gen $SAMPLE grow_then_shrink
+
+# ── Interleaved add and remove ────────────────
+cat > interleaved.in << 'EOF'
+n a q
+a a 1
+a a 2
+r a 1
+a a 3
+a a 1
+r a 2
+a a 4
+p a
+c a 1
+c a 2
+c a 3
+c a 4
+q
+EOF
+gen $SAMPLE interleaved
+
 echo "Generated .out/.err files from intSet_sample"
 
 # Compile
@@ -656,7 +1029,10 @@ else
               copy_ctor copy_assign self_assign \
               move_ctor move_assign self_ops \
               empty_ops union_empty grow negatives \
-              large_ops move_then_new invalid_cmd chain; do
+              large_ops move_then_new invalid_cmd chain \
+              single_elem boundary_ints copy_of_copy repeat_assign \
+              print_ops_result disjoint_union remove_all add_zero_neg \
+              eq_after_remove intersect_then_modify grow_then_shrink interleaved; do
         run_test ./intSet "$t"
     done
 fi

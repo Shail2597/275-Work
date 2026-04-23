@@ -1,0 +1,11 @@
+n a 1 2 3 q
+n b 4 5 6 q
+< a b
+p a
+< a b
+p a
+a a 99
+p a
+p b
+= a b
+q

@@ -1,0 +1,16 @@
+n a 42 q
+n b 42 q
+n c 99 q
+p a
+p b
+p c
+= a b
+= a c
+| a c
+& a c
+s a b
+s b a
+s a c
+c a 42
+c a 41
+q

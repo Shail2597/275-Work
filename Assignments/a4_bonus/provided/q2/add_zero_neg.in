@@ -1,0 +1,11 @@
+n a q
+a a 0
+a a -1
+a a -100
+a a 0
+p a
+c a 0
+c a -1
+c a -100
+c a 1
+q

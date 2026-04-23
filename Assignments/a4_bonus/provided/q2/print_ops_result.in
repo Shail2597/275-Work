@@ -1,0 +1,9 @@
+n a 1 2 3 4 q
+n b 3 4 5 6 q
+| a b
+& a b
+| a b
+& a b
+p a
+p b
+q
