@@ -1,31 +1,27 @@
 #ifndef INTSET_H_
 #define INTSET_H_
 #include <iostream>
-
 class intSet {
-  int *elements;
-  int elementCount;
-  int currentCapacity;
-  
-  int indexOf(int val) const;
-  void swap(intSet& otherSet);
-
+  int *data;
+  int size;
+  int capacity;
+  int indexOf(int e) const;
+  void swap(intSet& other);
  public:
-  intSet(); 
-  intSet(const intSet& otherSet); 
-  intSet(intSet &&otherSet); 
-  intSet &operator=(const intSet& otherSet); 
-  intSet &operator=(intSet &&otherSet); 
-  ~intSet();  
-  
-  intSet operator|(const intSet &otherSet) const; 
-  intSet operator&(const intSet &otherSet) const; 
-  bool operator==(const intSet &otherSet) const;  
-  bool isSubset(const intSet &s) const;  
-  bool contains(int val) const;     
-  void add(int val);          
-  void remove(int val);       
-  friend std::ostream& operator<<(std::ostream& out, const intSet& otherSet); 
+  intSet(); // default constructor
+  intSet(const intSet& is); // copy constructor
+  intSet(intSet &&is); // move constructor
+  intSet &operator=(const intSet& is); // copy assignment operator
+  intSet &operator=(intSet &&is); // move assignment operator
+  ~intSet();  // destructor
+  intSet operator|(const intSet &other) const; // Set union
+  intSet operator&(const intSet &other) const; // Set intersection.
+  bool operator==(const intSet &other) const;  // Set equality.
+  bool isSubset(const intSet &s) const;  // True if s is a subset of *this
+  bool contains(int e) const;     // True if *this contains e
+  void add(int e);          // Add e to this set.
+  void remove(int e);       // Remove e from this set.
+  friend std::ostream& operator<<(std::ostream& out, const intSet& is); // output operator for intSet
 };
 
 
