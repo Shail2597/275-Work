@@ -40,6 +40,9 @@ for key in "${types[@]}"; do
       continue
     fi
 
+    # Ensure the sample executable has execute permissions
+    chmod +x "${sampleExec}"
+
     echo -e "${YELLOW}--- Testing ${execName} ---${NC}"
 
     # 1. Test correctness
