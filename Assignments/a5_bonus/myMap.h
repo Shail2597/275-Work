@@ -1,11 +1,35 @@
 #ifndef MYMAP_H
 #define MYMAP_H
 
-#include <utility>
 #include <vector>
+#include <utility>
 
 template <typename K, typename V>
 class Map {
+private:
+  std::vector<std::pair<K, V>> dataStore;
+
+  // Returns the index of the first element >= key
+  std::size_t lowerBound(const K& key) const {
+    std::size_t startIdx = 0;
+    std::size_t endIdx = dataStore.size();
+
+    while (startIdx < endIdx) {
+      std::size_t pivot = startIdx + (endIdx - startIdx) / 2;
+      if (dataStore[pivot].first < key) {
+        startIdx = pivot + 1;
+      } else {
+        endIdx = pivot;
+      }
+    }
+    return startIdx;
+  }
+
+  // Helper to check equality using only the < operator
+  bool keysEqual(const K& a, const K& b) const {
+    return !(a < b) && !(b < a);
+  }
+
 public:
   Map() = default;
   ~Map() = default;
@@ -14,84 +38,57 @@ public:
   Map& operator=(const Map&) = default;
   Map& operator=(Map&&) = default;
 
+  V& operator[](const K& key) {
+    std::size_t insertIdx = lowerBound(key);
+    
+    if (insertIdx < dataStore.size() && keysEqual(dataStore[insertIdx].first, key)) {
+      return dataStore[insertIdx].second;
+    }
+
+    dataStore.insert(dataStore.begin() + insertIdx, std::pair<K, V>(key, V{}));
+    return dataStore[insertIdx].second;
+  }
+
+  V operator()(const K& key) const {
+    std::size_t insertIdx = lowerBound(key);
+    
+    if (insertIdx < dataStore.size() && keysEqual(dataStore[insertIdx].first, key)) {
+      return dataStore[insertIdx].second;
+    }
+
+    return V{}; 
+  }
+
+
   class Iterator {
+  private:
+    const Map* parentMap;
+    std::size_t iterPos;
+
   public:
-    Iterator() = default;
+    Iterator(const Map* map, std::size_t index) : parentMap(map), iterPos(index) {}
 
     const K& operator*() const {
-      return currIter_->first;
+      return parentMap->dataStore[iterPos].first;
     }
 
     Iterator& operator++() {
-      ++currIter_;
+      iterPos++;
       return *this;
     }
 
     bool operator!=(const Iterator& other) const {
-      return currIter_ != other.currIter_;
+      return parentMap != other.parentMap || iterPos != other.iterPos;
     }
-
-  private:
-    using BaseIter = typename std::vector<std::pair<K, V>>::const_iterator;
-
-    explicit Iterator(BaseIter iter) : currIter_(iter) {}
-
-    BaseIter currIter_{};
-
-    friend class Map;
   };
 
-  V& operator[](const K& key) {
-    using VecDiffType =
-        typename std::vector<std::pair<K, V>>::difference_type;
-
-    std::size_t idx = findLocation(key);
-    if (idx < vecData_.size() && !(key < vecData_[idx].first) &&
-        !(vecData_[idx].first < key)) {
-      return vecData_[idx].second;
-    }
-
-    vecData_.insert(vecData_.begin() + static_cast<VecDiffType>(idx),
-                    std::pair<K, V>(key, V{}));
-    return vecData_[idx].second;
-  }
-
-  V operator()(const K& key) const {
-    std::size_t idx = findLocation(key);
-    if (idx < vecData_.size() && !(key < vecData_[idx].first) &&
-        !(vecData_[idx].first < key)) {
-      return vecData_[idx].second;
-    }
-
-    return V{};
-  }
-
   Iterator begin() const {
-    return Iterator(vecData_.begin());
+    return Iterator(this, 0);
   }
 
   Iterator end() const {
-    return Iterator(vecData_.end());
+    return Iterator(this, dataStore.size());
   }
-
-private:
-  std::size_t findLocation(const K& key) const {
-    std::size_t low = 0;
-    std::size_t high = vecData_.size();
-
-    while (low < high) {
-      std::size_t center = low + (high - low) / 2;
-      if (vecData_[center].first < key) {
-        low = center + 1;
-      } else {
-        high = center;
-      }
-    }
-
-    return low;
-  }
-
-  std::vector<std::pair<K, V>> vecData_;
 };
 
 #endif
